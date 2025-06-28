@@ -1,0 +1,38 @@
+
+RAPPORT DE RECONNAISSANCE RÉSEAU
+================================
+Domaine analysé: nysafrica.com
+Date/Heure: 2025-06-28 00:52:31
+================================
+
+RÉSOLUTION DNS:
+- Adresse IP: 100.24.208.97
+- DNS Inverse: staticip2.multiscreensite.com
+
+CONNECTIVITÉ:
+- Taux de ping: 0.0%
+- TTL: None
+- Système probable: Inconnu
+
+PORTS OUVERTS:
+80, 443
+
+SERVICES WEB:
+- HTTP: Non accessible
+- HTTPS: Non accessible
+
+SOUS-DOMAINES TROUVÉS:
+- mail.nysafrica.com → 185.98.131.31
+- www.nysafrica.com → 76.223.58.8
+
+GRAPHIQUE DES PORTS:
+
+📊 GRAPHIQUE ASCII DES PORTS OUVERTS
+========================================
+   80 HTTP     |░░░░░░░░░░░░░░░░░░░░|
+  443 HTTPS    |████░░░░░░░░░░░░░░░░|
+========================================
+
+================================
+Fin du rapport
+        

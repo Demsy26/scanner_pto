@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Scanner Web</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Network Scanner Web</h1>
+        <p class="subtitle">Outil de reconnaissance réseau avec interface web</p>
+
+        <div class="scan-box">
+            <input type="text" id="domain" placeholder="Entrez un domaine (ex: example.com)" required>
+            <button onclick="startScan()">Lancer le Scan</button>
+        </div>
+
+        <div id="results" class="results">
+            <!-- Les résultats s'affichent ici dynamiquement -->
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyse en cours...</p>
+        </div>
+    </div>
+
+    <script>
+        async function startScan() {
+            const domain = document.getElementById("domain").value.trim();
+            if (!domain) {
+                alert("Veuillez entrer un domaine valide.");
+                return;
+            }
+
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("results").innerHTML = "";
+
+            try {
+                const response = await fetch("/scan", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `domain=${encodeURIComponent(domain)}`
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Affichage des résultats
+                let html = `
+                    <h2>📊 Résultats pour <span class="highlight">${domain}</span></h2>
+                    <div class="result-card">
+                        <h3>🔗 Résolution DNS</h3>
+                        <p><strong>IP:</strong> ${data.data.ip}</p>
+                        <p><strong>DNS Inverse:</strong> ${data.data.reverse_dns || "Non trouvé"}</p>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>📡 Connectivité</h3>
+                        <p><strong>Taux de Ping:</strong> ${data.data.ping_rate}%</p>
+                        <p><strong>OS probable:</strong> ${data.data.os_guess}</p>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>🚪 Ports Ouverts</h3>
+                        <pre>${data.data.port_graph || "Aucun port ouvert détecté."}</pre>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>🌐 Sous-domaines</h3>
+                        <ul>
+                            ${data.data.subdomains.map(sub => `<li>${sub[0]} → ${sub[1]}</li>`).join("") || "<li>Aucun sous-domaine trouvé.</li>"}
+                        </ul>
+                    </div>
+
+                    <a href="/download/${data.report}" class="download-btn">📥 Télécharger le Rapport</a>
+                `;
+
+                document.getElementById("results").innerHTML = html;
+            } catch (err) {
+                alert("Erreur lors du scan: " + err.message);
+            } finally {
+                document.getElementById("loading").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
